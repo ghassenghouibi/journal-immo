@@ -1,17 +1,32 @@
-# Journal Immobilier — site vitrine (Sousse, Tunisie)
+# Journal Immobilier — site de l'agence (Sousse, Tunisie)
 
-Site statique, sans étape de build, pensé mobile d'abord.
+Site Next.js (React, App Router, TypeScript), pensé mobile d'abord et prêt pour Vercel.
 
 ```sh
-python3 -m http.server 8000   # puis http://localhost:8000
+npm install
+npm run dev      # http://localhost:3000
+npm run build && npm start
 ```
 
-- `index.html` : application monopage (routes `#/`, `#/biens`, `#/bien/JI-101`, `#/sousse`, `#/services`, `#/estimation`, `#/contact`, `#/favoris`)
-- `charte.html` : charte graphique dérivée du logo
-- `assets/js/data.js` : biens, quartiers, agents et points d'intérêt (fictifs, positions indicatives)
-- `assets/js/app.js` : routeur, vues, cartes Leaflet (tuiles OpenStreetMap), proximités, simulateur de crédit, favoris
-- `assets/css/style.css` : styles et jetons de la charte
+## Déploiement sur Vercel
 
-À remplacer avant mise en ligne : téléphone / WhatsApp / e-mail / adresse (`data.js` et `index.html`),
-biens et photos, et brancher les formulaires sur un service d'envoi (ils affichent seulement une confirmation).
-Pour un trafic important, utiliser un fournisseur de tuiles cartographiques dédié plutôt que tile.openstreetmap.org.
+1. Importer le dépôt GitHub sur [vercel.com/new](https://vercel.com/new) : le framework Next.js est détecté automatiquement, aucun réglage n'est nécessaire.
+2. Une fois le domaine choisi, ajouter la variable d'environnement `NEXT_PUBLIC_SITE_URL` (ex. `https://journal-immobilier.tn`) pour les balises SEO, le sitemap et le robots.txt.
+
+## Structure
+
+| Chemin | Rôle |
+| --- | --- |
+| `src/app/` | Pages : accueil, `/biens` (liste + carte + filtres), `/biens/[id]` (fiche générée statiquement), `/sousse`, `/services`, `/estimation`, `/contact`, `/favoris`, `/charte` |
+| `src/lib/data.ts` | Biens, quartiers, agents, points d'intérêt (fictifs, positions indicatives) et coordonnées de l'agence |
+| `src/lib/utils.ts` | Formatage des prix, distances et proximités, filtres |
+| `src/components/` | En-tête, barre d'onglets mobile, cartes de biens, cartes Leaflet, formulaires, sections |
+| `src/app/globals.css` | Styles et jetons de la charte (bleu #0772BA, anthracite #1F1E1F, sable #F5F1EA) |
+| `public/` | Logos, favicon, photos |
+
+## À faire avant la mise en ligne
+
+- Remplacer téléphone, WhatsApp, e-mail et adresse dans `src/lib/data.ts` (`agency`).
+- Remplacer les biens et photos de démonstration.
+- Brancher les formulaires (contact, estimation, visite) sur un service d'envoi : ils affichent pour l'instant seulement une confirmation (`src/components/Forms.tsx`, `src/components/property/Visit.tsx`).
+- Pour un trafic important, utiliser un fournisseur de tuiles cartographiques dédié plutôt que `tile.openstreetmap.org` (`src/components/map/LeafletMap.tsx`).

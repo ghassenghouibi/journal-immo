@@ -1,7 +1,40 @@
 /* Journal Immobilier — données de démonstration (biens fictifs, positions indicatives) */
-window.JI = window.JI || {};
+import type { IconName } from '@/components/Icon';
 
-JI.agency = {
+export type Transaction = 'vente' | 'location';
+export type PropertyType = 'Appartement' | 'Villa' | 'Studio' | 'Duplex' | 'Local commercial';
+export type AgentId = 'yt' | 'kb' | 'ag';
+export type CategoryId = 'ecole' | 'sante' | 'commerce' | 'plage' | 'transport' | 'loisirs';
+
+export interface Property {
+  id: string;
+  transaction: Transaction;
+  type: PropertyType;
+  badge: string | null;
+  title: string;
+  quartier: string;
+  price: number;
+  surface: number;
+  terrain?: number;
+  rooms: number;
+  bedrooms: number;
+  bathrooms: number;
+  floor?: number;
+  year: number;
+  lat: number;
+  lng: number;
+  agent: AgentId;
+  images: string[];
+  features: string[];
+  description: string;
+}
+
+export interface Quartier { id: string; img: string; m2: number; lat: number; lng: number; pitch: string }
+export interface Poi { c: CategoryId; n: string; lat: number; lng: number }
+
+export const PROPERTY_TYPES: PropertyType[] = ['Appartement', 'Villa', 'Duplex', 'Studio', 'Local commercial'];
+
+export const agency = {
   name: 'Journal Immobilier',
   city: 'Sousse',
   address: 'Avenue Hédi Chaker, 4000 Sousse, Tunisie',
@@ -14,13 +47,13 @@ JI.agency = {
   lng: 10.6305
 };
 
-JI.agents = {
+export const agents: Record<AgentId, { name: string; role: string; initials: string }> = {
   yt: { name: 'Yasmine Trabelsi', role: 'Conseillère · Corniche & Khezama', initials: 'YT' },
   kb: { name: 'Karim Ben Salah', role: 'Conseiller · Villas & Kantaoui', initials: 'KB' },
   ag: { name: 'Amira Gharbi', role: 'Location & gestion locative', initials: 'AG' }
 };
 
-JI.quartiers = [
+export const quartiers: Quartier[] = [
   { id: 'Port El Kantaoui', img: 'villa-luxe.jpg', m2: 3800, lat: 35.893, lng: 10.596,
     pitch: 'Marina, golf 36 trous et résidences haut de gamme au nord de Sousse.' },
   { id: 'Boujaafar', img: 'beach.jpg', m2: 3300, lat: 35.833, lng: 10.633,
@@ -41,7 +74,7 @@ JI.quartiers = [
     pitch: 'Calme, terrains généreux, accès direct à l’autoroute A1.' }
 ];
 
-JI.properties = [
+export const properties: Property[] = [
   {
     id: 'JI-101', transaction: 'vente', type: 'Villa', badge: 'Exclusivité',
     title: 'Villa contemporaine avec piscine', quartier: 'Port El Kantaoui',
@@ -153,7 +186,7 @@ JI.properties = [
 ];
 
 /* Points d’intérêt — positions indicatives */
-JI.categories = {
+export const categories: Record<CategoryId, { label: string; short: string; icon: IconName; color: string }> = {
   ecole:     { label: 'Écoles & universités', short: 'Écoles',     icon: 'school', color: '#0772BA' },
   sante:     { label: 'Santé',                short: 'Santé',      icon: 'health', color: '#D64545' },
   commerce:  { label: 'Commerces',            short: 'Commerces',  icon: 'cart',   color: '#C98A1B' },
@@ -162,7 +195,7 @@ JI.categories = {
   loisirs:   { label: 'Culture & loisirs',    short: 'Loisirs',    icon: 'star',   color: '#2F8F4E' }
 };
 
-JI.pois = [
+export const pois: Poi[] = [
   // Écoles & universités
   { c: 'ecole', n: 'Lycée pilote de Sousse', lat: 35.8232, lng: 10.6062 },
   { c: 'ecole', n: 'École primaire Khezama', lat: 35.8462, lng: 10.6081 },
@@ -215,3 +248,5 @@ JI.pois = [
   { c: 'loisirs', n: 'Stade olympique de Sousse', lat: 35.8286, lng: 10.6202 },
   { c: 'loisirs', n: 'Promenade de la corniche', lat: 35.8402, lng: 10.6322 }
 ];
+
+export const getProperty = (id: string) => properties.find(p => p.id === id);
